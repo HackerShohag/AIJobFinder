@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "AI Job Finder",
+  "name": "AI Job Finder is a AI based web service to provide users best experience of job search. It helps users to find their best job according to their needs and interests.",
   "icons": [
     {
       "src": "favicon.ico",
