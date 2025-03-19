@@ -29,13 +29,49 @@ function App() {
             setUserData({ ...userData, study_field: e.target.value })
           }
         />
+
+        <select
+          onChange={(e) =>
+            setUserData({ ...userData, job_type: e.target.value })
+          }
+        >
+          <option value="">Select Job Type</option>
+          <option value="full-time">Full-time</option>
+          <option value="part-time">Part-time</option>
+          <option value="internship">Internship</option>
+          <option value="remote">Remote</option>
+        </select>
+
         <input
           type="text"
-          placeholder="Research Interests"
+          placeholder="Preferred Job Role (e.g., AI Engineer)"
           onChange={(e) =>
-            setUserData({ ...userData, research_interests: e.target.value })
+            setUserData({ ...userData, job_role: e.target.value })
           }
         />
+
+        <input
+          type="text"
+          placeholder="Programming Skills (e.g., Python, TensorFlow)"
+          onChange={(e) => setUserData({ ...userData, skills: e.target.value })}
+        />
+
+        <input
+          type="text"
+          placeholder="Preferred Location (e.g., USA, Remote)"
+          onChange={(e) =>
+            setUserData({ ...userData, location: e.target.value })
+          }
+        />
+
+        <input
+          type="number"
+          placeholder="Minimum Expected Salary ($)"
+          onChange={(e) =>
+            setUserData({ ...userData, min_salary: e.target.value })
+          }
+        />
+
         <button type="submit">Find Opportunities</button>
       </form>
 

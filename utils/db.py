@@ -9,11 +9,15 @@ def save_to_db(df):
         CREATE TABLE IF NOT EXISTS opportunities (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT,
+            company TEXT,
             deadline TEXT,
-            link TEXT
+            link TEXT,
+            source TEXT,
+            score REAL
         )
     """)
 
+    # Save all columns including company, source, score
     df.to_sql("opportunities", conn, if_exists="replace", index=False)
     
     conn.commit()
