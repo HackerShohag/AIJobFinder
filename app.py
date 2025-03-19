@@ -30,7 +30,6 @@ def match_opportunities(user_data):
 @app.route("/recommend", methods=["POST"])
 def recommend():
     user_data = request.json
-    print("User data: ", user_data)
     recommendations = match_opportunities(user_data)
     return jsonify(recommendations)
 
