@@ -8,7 +8,7 @@ app = Flask(__name__)
 CORS(app)
 
 def match_opportunities(user_data):
-    conn = sqlite3.connect("utils/opportunities.db")
+    conn = sqlite3.connect("opportunities.db")
     cursor = conn.cursor()
     
     cursor.execute("SELECT title, link FROM opportunities")
