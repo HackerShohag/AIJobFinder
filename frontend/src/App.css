@@ -75,3 +75,87 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid white;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 0.6s linear infinite;
+}
+
+.loading-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Style the select dropdown */
+select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  background-color: white;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Change border color when focused */
+select:focus {
+  outline: none;
+  border-color: #0056b3;
+  box-shadow: 0 0 5px rgba(0, 91, 187, 0.5);
+}
+
+/* Style the dropdown arrow */
+select::-ms-expand {
+  display: none; /* Remove default dropdown arrow in IE */
+}
+
+/* Add hover effect */
+select:hover {
+  background-color: #f0f8ff;
+}
+
+/* Add a custom arrow using a pseudo-element */
+.select-container {
+  position: relative;
+  width: 100%;
+}
+
+.select-container::after {
+  content: "▼";
+  font-size: 14px;
+  color: #007bff;
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Ensure select dropdown looks good on mobile */
+@media (max-width: 600px) {
+  select {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
