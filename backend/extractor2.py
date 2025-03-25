@@ -33,7 +33,7 @@ def ocr_from_pdf(file_path):
     return text
 
 # Function to extract keywords using KeyBERT
-def extract_keywords_from_text(text, top_n=5):
+def extract_keywords_from_text(text, top_n=15):
     try:
         kw_model = KeyBERT()
         keywords = kw_model.extract_keywords(text, top_n=top_n, stop_words='english')

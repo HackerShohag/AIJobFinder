@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import JobScraper from "./JobScraper";
 import './UploadCV.css'; // Import the CSS file
+import ExpectedKeywords from "./Keywords";
 
 const UploadCV = () => {
   const [file, setFile] = useState(null);
@@ -98,38 +99,7 @@ const UploadCV = () => {
       </div>
 
       <div className="resultSection">
-        <h3 className="subHeading">Extracted Keywords</h3>
-        {isLoading && (
-          <div style={{ textAlign: "center", padding: "20px" }}>
-            <span
-              style={{
-                display: "inline-block",
-                width: "50px",
-                height: "50px",
-                border: "5px solid black",
-                borderTop: "5px solid transparent",
-                borderRadius: "50%",
-                animation: "spin 1s linear infinite",
-                marginRight: "8px",
-              }}
-            ></span>
-          </div>
-        )}
-        {keywords.length > 0 ? (
-          <div className="keywordContainer">
-            {keywords.map((keyword, index) => (
-              <span key={index} className="keyword">
-                {keyword}
-              </span>
-            ))}
-          </div>
-        ) : (
-          <p style={{ textAlign: "center" }} >No keywords extracted.</p>
-        )
-        }
-      </div>
-      <div className="resultSection">
-        <JobScraper keywords={keywords} />
+        <ExpectedKeywords keywords={keywords} isLoading={isLoading} />
       </div>
     </div>
   );
