@@ -8,6 +8,7 @@ const JobScraper = ({ keywords }) => {
 
   useEffect(() => {
     const fetchJobs = async () => {
+      setJobs([]);
       setIsLoading(true);
       try {
         const response = await axios.post("http://127.0.0.1:5000/scrape_jobs", {
@@ -35,7 +36,7 @@ const JobScraper = ({ keywords }) => {
   return (
     <div style={{ textAlign: "center", marginTop: "20px" }}>
       <h2>Recommended Jobs</h2>
-      {!isLoading && message && <p>{message}</p>}
+      {!(jobs.length > 0) && message && <p>{message}</p>}
 
       {isLoading && <div style={{ textAlign: "center", padding: "20px" }}>
         <span
