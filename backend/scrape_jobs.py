@@ -1,30 +1,19 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+import requests
 from bs4 import BeautifulSoup
-import time
-from extractor2 import process_cv
 
 def scrape_linkedin_jobs(keywords, location="Bangladesh"):
-    options = Options()
-    options.add_argument("--headless")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--window-size=1920,1080")
-    options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)")
-    print(keywords)
-    print(location)
-
-    driver = webdriver.Chrome(options=options)
-
     search_query = "+".join(keywords)
     url = f"https://www.linkedin.com/jobs/search/?keywords={search_query}&location={location}"
-    driver.get(url)
-    time.sleep(7)  # Increase if needed to load full content
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    }
 
-    soup = BeautifulSoup(driver.page_source, 'html.parser')
-    driver.quit()
-    print(keywords)
-    print(location)
+    response = requests.get(url, headers=headers)
+    if response.status_code != 200:
+        print(f"Failed to fetch LinkedIn jobs page. Status code: {response.status_code}")
+        return []
 
+    soup = BeautifulSoup(response.text, 'html.parser')
 
     jobs = []
     # Correct class selector for individual job cards
@@ -36,11 +25,11 @@ def scrape_linkedin_jobs(keywords, location="Bangladesh"):
 
         if title_tag and company_tag and link_tag:
             jobs.append({
-            'title': title_tag.get_text(strip=True),
-            'company': company_tag.get_text(strip=True),
-            'location': location_tag.get_text(strip=True) if location_tag else "N/A",
-            'link': link_tag['href'],  # ✅ Extracting job link
-            'source': 'LinkedIn'
+                'title': title_tag.get_text(strip=True),
+                'company': company_tag.get_text(strip=True),
+                'location': location_tag.get_text(strip=True) if location_tag else "N/A",
+                'link': link_tag['href'],  # ✅ Extracting job link
+                'source': 'LinkedIn'
             })
 
     return jobs

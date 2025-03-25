@@ -1,15 +1,22 @@
 import React, { useState } from "react";
 import axios from "axios";
 import JobScraper from "./JobScraper";
+import './UploadCV.css'; // Import the CSS file
 
 const UploadCV = () => {
   const [file, setFile] = useState(null);
   const [keywords, setKeywords] = useState([]);
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleUpload = async () => {
+    setIsLoading(true);
+    setMessage("");
+    setKeywords([]);
+
     if (!file) {
       setMessage("Please select a file.");
+      setIsLoading(false);
       return;
     }
 
@@ -17,7 +24,6 @@ const UploadCV = () => {
     formData.append("file", file);
 
     try {
-      console.log("Uploading file...");
       const response = await axios.post(
         "http://127.0.0.1:5000/upload",
         formData,
@@ -37,128 +43,96 @@ const UploadCV = () => {
       }
     } catch (error) {
       console.error("Upload Error:", error);
-      setMessage("Error uploading file.");
+      setMessage("Please upload a valid file.");
+      setKeywords([]);
     }
+    setIsLoading(false);
   };
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.heading}>
+    <div className="container">
+      <h1 className="heading">
         Skill<span style={{ color: "#4CAF50" }}>Scope</span>
       </h1>
 
-      <div style={styles.card}>
+      <div className="card">
         <input
           type="file"
           onChange={(e) => setFile(e.target.files[0])}
-          style={styles.fileInput}
+          className="fileInput"
         />
 
         <button
           onClick={handleUpload}
-          style={styles.button}
-          onMouseOver={(e) => (e.target.style.backgroundColor = "#45a049")}
-          onMouseOut={(e) => (e.target.style.backgroundColor = "#4CAF50")}
+          className={`button ${isLoading ? "disabled" : ""}`}
+          onMouseOver={(e) => {
+            if (!isLoading) e.target.style.backgroundColor = "#45a049";
+          }}
+          onMouseOut={(e) => {
+            if (!isLoading) e.target.style.backgroundColor = "#4CAF50";
+          }}
+          disabled={isLoading}
         >
-          Upload CV
+          {isLoading ? (
+            <span>
+              <span
+                style={{
+                  display: "inline-block",
+                  width: "16px",
+                  height: "16px",
+                  border: "2px solid white",
+                  borderTop: "2px solid transparent",
+                  borderRadius: "50%",
+                  animation: "spin 1s linear infinite",
+                  marginRight: "8px",
+                }}
+              ></span>
+              Uploading...
+            </span>
+          ) : (
+            "Upload CV"
+          )}
         </button>
 
-        {message && <p style={styles.message}>{message}</p>}
+        {isLoading && message && <p className="message">{message}</p>}
       </div>
 
-      {keywords.length > 0 && (
-        <div style={styles.resultSection}>
-          <h3 style={styles.subHeading}>Extracted Keywords</h3>
-          <div style={styles.keywordContainer}>
+      <div className="resultSection">
+        <h3 className="subHeading">Extracted Keywords</h3>
+        {isLoading && (
+          <div style={{ textAlign: "center", padding: "20px" }}>
+            <span
+              style={{
+                display: "inline-block",
+                width: "50px",
+                height: "50px",
+                border: "5px solid black",
+                borderTop: "5px solid transparent",
+                borderRadius: "50%",
+                animation: "spin 1s linear infinite",
+                marginRight: "8px",
+              }}
+            ></span>
+          </div>
+        )}
+        {keywords.length > 0 ? (
+          <div className="keywordContainer">
             {keywords.map((keyword, index) => (
-              <span key={index} style={styles.keyword}>
+              <span key={index} className="keyword">
                 {keyword}
               </span>
             ))}
           </div>
-
-          {/* Auto-render JobScraper after keywords extraction */}
-          <JobScraper keywords={keywords} />
-        </div>
-      )}
+        ) : (
+          <p style={{ textAlign: "center" }} >No keywords extracted.</p>
+        )
+        }
+      </div>
+      <div className="resultSection">
+        <JobScraper keywords={keywords} />
+      </div>
     </div>
   );
 };
 
 export default UploadCV;
-
-const styles = {
-  container: {
-    minHeight: "100vh",
-    backgroundColor: "#f4f6f8",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "30px",
-    fontFamily: "Arial, sans-serif",
-  },
-  heading: {
-    fontSize: "3rem",
-    color: "#333",
-    marginBottom: "20px",
-  },
-  card: {
-    backgroundColor: "#fff",
-    padding: "30px",
-    borderRadius: "12px",
-    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-    textAlign: "center",
-    width: "90%",
-    maxWidth: "500px",
-  },
-  fileInput: {
-    padding: "10px",
-    width: "100%",
-    marginBottom: "20px",
-    borderRadius: "8px",
-    border: "1px solid #ccc",
-  },
-  button: {
-    padding: "12px 30px",
-    backgroundColor: "#4CAF50",
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontSize: "16px",
-    transition: "background-color 0.3s ease",
-  },
-  message: {
-    marginTop: "15px",
-    color: "#555",
-    fontSize: "16px",
-  },
-  resultSection: {
-    marginTop: "40px",
-    width: "90%",
-    maxWidth: "600px",
-    backgroundColor: "#fff",
-    padding: "25px",
-    borderRadius: "12px",
-    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-  },
-  subHeading: {
-    fontSize: "24px",
-    color: "#333",
-    marginBottom: "15px",
-  },
-  keywordContainer: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: "10px",
-  },
-  keyword: {
-    backgroundColor: "#e0f7e9",
-    padding: "8px 15px",
-    borderRadius: "20px",
-    color: "#333",
-    fontSize: "14px",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-  },
-};

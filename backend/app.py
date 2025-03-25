@@ -2,14 +2,13 @@ import os
 from flask import Flask, flash, request, jsonify
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
+from utils import UPLOAD_FOLDER, allowed_file
 from scrape_jobs import scrape_linkedin_jobs
 from extractor2 import process_cv
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
-UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'pdf', 'docx'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = os.urandom(24)
@@ -21,9 +20,6 @@ if not os.path.exists(UPLOAD_FOLDER):
 @app.route('/', methods=['GET'])
 def home():
     return jsonify({"message": "Flask server running"}), 200
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/upload', methods=['POST'])
 def upload_file():

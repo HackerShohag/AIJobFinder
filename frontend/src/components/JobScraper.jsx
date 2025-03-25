@@ -3,10 +3,12 @@ import axios from "axios";
 
 const JobScraper = ({ keywords }) => {
   const [jobs, setJobs] = useState([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("No jobs found.");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchJobs = async () => {
+      setIsLoading(true);
       try {
         const response = await axios.post("http://127.0.0.1:5000/scrape_jobs", {
           keywords,
@@ -22,6 +24,7 @@ const JobScraper = ({ keywords }) => {
         console.error("Error fetching jobs:", error);
         setMessage("Failed to fetch jobs.");
       }
+      setIsLoading(false);
     };
 
     if (keywords && keywords.length > 0) {
@@ -32,9 +35,24 @@ const JobScraper = ({ keywords }) => {
   return (
     <div style={{ textAlign: "center", marginTop: "20px" }}>
       <h2>Recommended Jobs</h2>
-      {message && <p>{message}</p>}
+      {!isLoading && message && <p>{message}</p>}
 
-      {jobs.length > 0 ? (
+      {isLoading && <div style={{ textAlign: "center", padding: "20px" }}>
+        <span
+          style={{
+            display: "inline-block",
+            width: "50px",
+            height: "50px",
+            border: "5px solid black",
+            borderTop: "5px solid transparent",
+            borderRadius: "50%",
+            animation: "spin 1s linear infinite",
+            marginRight: "8px",
+          }}
+        ></span>
+      </div>}
+
+      {jobs.length > 0 && (
         <ul style={{ listStyleType: "none", padding: 0 }}>
           {jobs.map((job, index) => (
             <li
@@ -69,7 +87,7 @@ const JobScraper = ({ keywords }) => {
             </li>
           ))}
         </ul>
-      ) : null}
+      )      }
     </div>
   );
 };
