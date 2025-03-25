@@ -17,15 +17,17 @@ const UploadCV = () => {
     formData.append("file", file);
 
     try {
+      console.log("Uploading file...");
       const response = await axios.post(
         "http://127.0.0.1:5000/upload",
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
+          withCredentials: true,
         }
       );
+
+      console.log(response);
 
       if (response.data.success) {
         setKeywords(response.data.extracted_keywords);
@@ -41,27 +43,39 @@ const UploadCV = () => {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.heading}>Upload CV</h1>
-      <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-      <button
-        onClick={handleUpload}
-        style={styles.button}
-        onMouseOver={(e) => (e.target.style.backgroundColor = "#45a049")}
-        onMouseOut={(e) => (e.target.style.backgroundColor = "#4CAF50")}
-      >
-        Upload CV
-      </button>
+      <h1 style={styles.heading}>
+        Skill<span style={{ color: "#4CAF50" }}>Scope</span>
+      </h1>
 
-      {message && <p>{message}</p>}
+      <div style={styles.card}>
+        <input
+          type="file"
+          onChange={(e) => setFile(e.target.files[0])}
+          style={styles.fileInput}
+        />
+
+        <button
+          onClick={handleUpload}
+          style={styles.button}
+          onMouseOver={(e) => (e.target.style.backgroundColor = "#45a049")}
+          onMouseOut={(e) => (e.target.style.backgroundColor = "#4CAF50")}
+        >
+          Upload CV
+        </button>
+
+        {message && <p style={styles.message}>{message}</p>}
+      </div>
 
       {keywords.length > 0 && (
-        <div style={{ marginTop: "30px" }}>
-          <h3>Extracted Keywords:</h3>
-          <ul style={{ listStyleType: "none", padding: 0 }}>
+        <div style={styles.resultSection}>
+          <h3 style={styles.subHeading}>Extracted Keywords</h3>
+          <div style={styles.keywordContainer}>
             {keywords.map((keyword, index) => (
-              <li key={index}>{keyword}</li>
+              <span key={index} style={styles.keyword}>
+                {keyword}
+              </span>
             ))}
-          </ul>
+          </div>
 
           {/* Auto-render JobScraper after keywords extraction */}
           <JobScraper keywords={keywords} />
@@ -74,15 +88,77 @@ const UploadCV = () => {
 export default UploadCV;
 
 const styles = {
-  container: { textAlign: "center", padding: "30px" },
-  heading: { color: "#333" },
+  container: {
+    minHeight: "100vh",
+    backgroundColor: "#f4f6f8",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "30px",
+    fontFamily: "Arial, sans-serif",
+  },
+  heading: {
+    fontSize: "3rem",
+    color: "#333",
+    marginBottom: "20px",
+  },
+  card: {
+    backgroundColor: "#fff",
+    padding: "30px",
+    borderRadius: "12px",
+    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+    textAlign: "center",
+    width: "90%",
+    maxWidth: "500px",
+  },
+  fileInput: {
+    padding: "10px",
+    width: "100%",
+    marginBottom: "20px",
+    borderRadius: "8px",
+    border: "1px solid #ccc",
+  },
   button: {
-    padding: "10px 20px",
+    padding: "12px 30px",
     backgroundColor: "#4CAF50",
     color: "white",
     border: "none",
     borderRadius: "8px",
     cursor: "pointer",
-    marginTop: "10px",
+    fontSize: "16px",
+    transition: "background-color 0.3s ease",
+  },
+  message: {
+    marginTop: "15px",
+    color: "#555",
+    fontSize: "16px",
+  },
+  resultSection: {
+    marginTop: "40px",
+    width: "90%",
+    maxWidth: "600px",
+    backgroundColor: "#fff",
+    padding: "25px",
+    borderRadius: "12px",
+    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+  },
+  subHeading: {
+    fontSize: "24px",
+    color: "#333",
+    marginBottom: "15px",
+  },
+  keywordContainer: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "10px",
+  },
+  keyword: {
+    backgroundColor: "#e0f7e9",
+    padding: "8px 15px",
+    borderRadius: "20px",
+    color: "#333",
+    fontSize: "14px",
+    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
   },
 };
