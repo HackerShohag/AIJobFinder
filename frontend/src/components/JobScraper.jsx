@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const JobScraper = ({ keywords }) => {
+const JobScraper = ({ originalText, keywords }) => {
   const [jobs, setJobs] = useState([]);
   const [message, setMessage] = useState("No jobs found.");
   const [isLoading, setIsLoading] = useState(false);
@@ -33,9 +33,24 @@ const JobScraper = ({ keywords }) => {
     }
   }, [keywords]);
 
+
+  const compareCVWithJob = async (job) => {
+    try {
+      const response = await axios.post("http://127.0.0.1:5000/compare", {
+        cv_text: originalText,
+        job_url: job.link,
+      });
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
+      setMessage("Failed to fetch jobs.");
+    }
+  }
+
   return (
     <div style={{ textAlign: "center", marginTop: "20px", padding: "20px" }}>
-      <h2 style={{ fontSize: "24px", marginBottom: "20px" }}>Recommended Jobs</h2>
+      <h2 style={{ fontSize: "24px", marginBottom: "20px" }}>
+        Recommended Jobs
+      </h2>
       {!(jobs.length > 0) && message && (
         <p style={{ fontSize: "18px", color: "#555" }}>{message}</p>
       )}
@@ -71,6 +86,23 @@ const JobScraper = ({ keywords }) => {
                 textAlign: "left",
               }}
             >
+              <div style={{ textAlign: "right", marginTop: "10px" }}>
+                <button
+                  onClick={() => compareCVWithJob(job)}
+                  style={{
+                    display: "inline-block",
+                    padding: "10px 15px",
+                    backgroundColor: "#aa7bbb",
+                    color: "#fff",
+                    textDecoration: "none",
+                    borderRadius: "5px",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Compare
+                </button>
+              </div>
               <h3 style={{ fontSize: "20px", marginBottom: "10px" }}>
                 {job.title}
               </h3>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import JobScraper from './JobScraper';
 
-function ExpectedKeywords({ keywords, isLoading }) {
+function ExpectedKeywords({ keywords, originalText, isLoading }) {
     
     const [expectedKeywords, setExpectedKeywords] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -120,7 +120,7 @@ function ExpectedKeywords({ keywords, isLoading }) {
             )}
             <div style={{ paddingTop: "50px" }}>
             {
-                selectedKeywords.length > 0 && <JobScraper keywords={selectedKeywords} />
+                selectedKeywords.length > 0 && <JobScraper originalText={originalText} keywords={selectedKeywords} />
             }
             </div>
         </>

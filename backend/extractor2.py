@@ -55,6 +55,6 @@ def process_cv(file_path):
         return {"error": "No keywords extracted"}
     
     return {
-        "extracted_text": text[:500],  # Preview of first 500 chars
+        "extracted_text": text,  # Preview of first 500 chars
         "keywords": keywords
     }

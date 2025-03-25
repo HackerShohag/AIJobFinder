@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import JobScraper from "./JobScraper";
-import './UploadCV.css'; // Import the CSS file
+import "./UploadCV.css"; // Import the CSS file
 import ExpectedKeywords from "./Keywords";
 
 const UploadCV = () => {
@@ -9,6 +9,7 @@ const UploadCV = () => {
   const [keywords, setKeywords] = useState([]);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [extractedText, setExtractedText] = useState("");
 
   const handleUpload = async () => {
     setIsLoading(true);
@@ -39,6 +40,7 @@ const UploadCV = () => {
       if (response.data.success) {
         setKeywords(response.data.extracted_keywords);
         setMessage(response.data.message);
+        setExtractedText(response.data.extracted_text);
       } else {
         setMessage("Error: " + response.data.error);
       }
@@ -99,7 +101,11 @@ const UploadCV = () => {
       </div>
 
       <div className="resultSection">
-        <ExpectedKeywords keywords={keywords} isLoading={isLoading} />
+        <ExpectedKeywords
+          originalText={extractedText}
+          keywords={keywords}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   );
